@@ -24,7 +24,9 @@ def filter_language_sentences(input_file, output_file, allowed_chars):
                     continue
                     
                 # Check if all characters (excluding whitespace) are in allowed set
-                if all(char in allowed_chars or char.isspace() for char in line):
+                # and line has at least 3 words
+                words = line.split()
+                if len(words) >= 3 and all(char in allowed_chars or char.isspace() for char in line):
                     outfile.write(line + '\n')
                     
         print(f"Filtered sentences written to {output_file}")
@@ -38,19 +40,21 @@ SPANISH_CHARS = "abcdefghijklmnñopqrstuvwxyzáéíóúü¿¡ABCDEFGHIJKLMNÑOPQ
 FRENCH_CHARS = "abcdefghijklmnopqrstuvwxyzàâäéèêëîïôöùûüÿçœæABCDEFGHIJKLMNOPQRSTUVWXYZÀÂÄÉÈÊËÎÏÔÖÙÛÜŸÇŒÆ.,;:\"'()!?"
 GERMAN_CHARS = "abcdefghijklmnopqrstuvwxyzäöüßABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ.,;:\"'()!?"
 HINDI_CHARS = "अआइईउऊएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसहक्षत्रज्ञड़ढ़।॥॰॒॑ँंःािीुूृॄेैोौ्.,;:\"'()!?"
+PORTUGUESE_CHARS = "abcdefghijklmnopqrstuvwxyzàáâãçéêíóôõúüABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÇÉÊÍÓÔÕÚÜ.,;:\"'()!?"
+JAPANESE_CHARS = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポ、。！？「」『』・ー.,;:\"'()!?"
 
 
 def main():
     """
     Main function to run the language filtering script from command line arguments.
     Expected arguments: input_file output_file language
-    Supported languages: spanish, french, german, hindi
+    Supported languages: spanish, french, german, hindi, portuguese, japanese
     """
     import sys
     
     if len(sys.argv) != 4:
         print("Usage: python clean_dataset.py input_file output_file language")
-        print("Supported languages: spanish, french, german, hindi")
+        print("Supported languages: spanish, french, german, hindi, portuguese, japanese")
         sys.exit(1)
         
     input_file = sys.argv[1]
@@ -62,12 +66,14 @@ def main():
         'spanish': SPANISH_CHARS,
         'french': FRENCH_CHARS,
         'german': GERMAN_CHARS,
-        'hindi': HINDI_CHARS
+        'hindi': HINDI_CHARS,
+        'portuguese': PORTUGUESE_CHARS,
+        'japanese': JAPANESE_CHARS
     }
     
     if language not in language_chars:
         print(f"Error: Unsupported language '{language}'")
-        print("Supported languages: spanish, french, german, hindi")
+        print("Supported languages: spanish, french, german, hindi, portuguese, japanese")
         sys.exit(1)
         
     try:
